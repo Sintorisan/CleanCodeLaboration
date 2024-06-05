@@ -2,7 +2,7 @@
 
 public interface IGameLogic
 {
-    string GameId { get; set; }
+    string GameId { get; }
     string FirstDataStorage { get; set; }
     string SecondDataStorage { get; set; }
     int Score { get; set; }

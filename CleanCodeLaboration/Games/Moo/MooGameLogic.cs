@@ -8,7 +8,7 @@ public class MooGameLogic : IGameLogic
     private const int MIN_NUMBER = 1000;
     private Random randomGenerator = new Random();
 
-    public string GameId { get; set; } = string.Empty;
+    public string GameId { get; } = "Cows N Bulls";
     public int Score { get; set; }
     public string FirstDataStorage { get; set; } = string.Empty; //Random number to guess
     public string SecondDataStorage { get; set; } = string.Empty; //User guess
