@@ -1,5 +1,6 @@
 ﻿using CleanCodeLaboration.Entities;
-using CleanCodeLaboration.Interfaces;
+using CleanCodeLaboration.Interfaces.GameInterfaces;
+using CleanCodeLaboration.Interfaces.ServiceInterfaces;
 
 namespace CleanCodeLaboration.Services;
 
@@ -7,29 +8,29 @@ public class HighScoreService : IHighScoreService
 {
     private readonly IGameLogic _game;
     private readonly List<HighScoreForm> _highScores = new List<HighScoreForm>();
-    private string _gameHighScoreFilePath;
-
+    private string _filePath;
 
     public HighScoreService(IGameLogic game)
     {
         _game = game;
-        _gameHighScoreFilePath = $"{_game.GameId}.csv";
+        _filePath = $"{_game.GameId}.csv";
         InitialLoadHighScores();
     }
 
-    // Läser av filen
+    //Ska vara en låtsas db.
+    //Bryter ner en .csv fil för att fylla på spelarens datatyp och returnerar en lista.
     private void InitialLoadHighScores()
     {
-        if (File.Exists(_gameHighScoreFilePath))
+        if (File.Exists(_filePath))
         {
-            var highScoreTable = File.ReadAllLines(_gameHighScoreFilePath);
+            var highScoreTable = File.ReadAllLines(_filePath);
             foreach (var highScore in highScoreTable)
             {
                 var data = highScore.Split(',');
                 var createHighScore = new HighScoreForm
                 {
                     PlayerId = data[0],
-                    HighScore = data[1]
+                    HighScore = int.Parse(data[1])
                 };
                 _highScores.Add(createHighScore);
             }
@@ -39,7 +40,14 @@ public class HighScoreService : IHighScoreService
     public void AddHighScore(HighScoreForm highScore)
     {
         _highScores.Add(highScore);
-        File.AppendAllText(_gameHighScoreFilePath, $"{highScore.PlayerId},{highScore.HighScore}\n");
+        File.AppendAllText(_filePath, $"{highScore.PlayerId},{highScore.HighScore}\n");
+    }
+
+    public HighScoreForm GetHighestPlayerScore(string playerId)
+    {
+        var highestScore = GetAllUserHighScore(playerId).OrderByDescending(h => h.HighScore).FirstOrDefault();
+
+        return highestScore ?? new HighScoreForm() { GameId = "", HighScore = 0, Date = DateTime.Now, PlayerId = "" };
     }
 
     public ICollection<HighScoreForm> GetAllHighScores() => _highScores;

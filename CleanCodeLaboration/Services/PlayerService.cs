@@ -1,19 +1,29 @@
 ﻿using CleanCodeLaboration.Entities;
 using CleanCodeLaboration.Interfaces;
+using CleanCodeLaboration.Interfaces.ServiceInterfaces;
 
 namespace CleanCodeLaboration.Services;
 
 public class PlayerService : IPlayerService
 {
     private const string FILE_PATH = "playersDb.csv";
-    IPlayer? Player { get; set; }
+    public List<IPlayer> _allPlayers = new List<IPlayer>();
+    public IPlayer? Player { get; set; }
+
+    public PlayerService(string playerName)
+    {
+        InitialLoad(playerName);
+    }
 
     public void InitialLoad(string playerName)
     {
         Player = SetPlayer(playerName);
+        GetAllPlayers();
     }
 
-    private IPlayer SetPlayer(string playerName)
+    public IPlayer GetCurrentPlayer() => Player!;
+
+    public IPlayer SetPlayer(string playerName)
     {
         if (isPlayerFound(playerName))
         {
@@ -22,8 +32,18 @@ public class PlayerService : IPlayerService
 
         return CreatePlayer(playerName);
     }
+    public bool isPlayerFound(string playerId)
+    {
+        if (!File.Exists(FILE_PATH))
+            return false;
 
-    //
+        return _allPlayers.Any(p => p.PlayerId.ToLower() == playerId.ToLower());
+    }
+    public IPlayer GetSinglePlayer(string userName)
+    {
+        return _allPlayers.FirstOrDefault(p => p.PlayerId == userName)!;
+    }
+
     private IPlayer CreatePlayer(string playerName)
     {
         var newPlayer = new Player { PlayerId = playerName };
@@ -33,34 +53,27 @@ public class PlayerService : IPlayerService
         return newPlayer;
     }
 
-    public bool isPlayerFound(string playerId)
-    {
-        return GetAllPlayers().Any(p => p.PlayerId.ToLower() == playerId.ToLower());
-    }
-
-    public IPlayer GetSinglePlayer(string userName)
-    {
-        return GetAllPlayers().FirstOrDefault(p => p.PlayerId == userName)!;
-    }
-
     //Ska vara en låtsas db.
     //Bryter ner en .csv fil för att fylla på spelarens datatyp och returnerar en lista.
-    private IList<IPlayer> GetAllPlayers()
+    public void GetAllPlayers()
     {
-        var allUsers = new List<IPlayer>();
-        var playerTable = File.ReadAllLines(FILE_PATH);
-
-        foreach (string player in playerTable)
+        if (File.Exists(FILE_PATH))
         {
-            var data = player.Split(',');
-            var playerToAdd = new Player
-            {
-                PlayerId = data[0],
-            };
-            allUsers.Add(playerToAdd);
-        }
+            var playerTable = File.ReadAllLines(FILE_PATH);
 
-        return allUsers;
+            foreach (string player in playerTable)
+            {
+                var data = player.Split(',');
+                var playerToAdd = new Player
+                {
+                    PlayerId = data[0],
+                };
+                _allPlayers.Add(playerToAdd);
+            }
+        }
     }
+
+
+
 }
 

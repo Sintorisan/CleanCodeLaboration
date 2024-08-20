@@ -1,4 +1,4 @@
-﻿using CleanCodeLaboration.Interfaces;
+﻿using CleanCodeLaboration.Interfaces.GameInterfaces;
 
 namespace CleanCodeLaboration.Games.Moo;
 
@@ -31,7 +31,7 @@ public class MooGameLogic : IGameLogic
 
 
     private void CreateNumberCombination()
-    {
+    {// Ska slumpa fram 4 unika siffror
         int numberCombination = randomGenerator.Next(MIN_NUMBER, MAX_NUMBER);
         FirstDataStorage = numberCombination.ToString();
     }
@@ -67,10 +67,10 @@ public class MooGameLogic : IGameLogic
             }
         }
 
-        return CowAndBullsRespons(cows, bulls);
+        return CowAndBullsResponse(cows, bulls);
 
-        string CowAndBullsRespons(int cows, int bulls) => "BBBB".Substring(0, bulls) + "," + "CCCC".Substring(0, cows);
     }
+    string CowAndBullsResponse(int cows, int bulls) => "BBBB".Substring(0, bulls) + "," + "CCCC".Substring(0, cows);
 
     public void ResetStorage()
     {

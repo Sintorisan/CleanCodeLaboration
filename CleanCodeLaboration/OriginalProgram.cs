@@ -126,7 +126,7 @@
 //	class PlayerData
 //	{
 //		public string Name { get; private set; }
-//        public int NGames { get; private set; }
+//		public int NGames { get; private set; }
 //		int totalGuess;
 
 
@@ -149,14 +149,14 @@
 //		}
 
 
-//	    public override bool Equals(Object p)
+//		public override bool Equals(Object p)
 //		{
 //			return Name.Equals(((PlayerData)p).Name);
 //		}
 
 
-//	    public override int GetHashCode()
-//        {
+//		public override int GetHashCode()
+//		{
 //			return Name.GetHashCode();
 //		}
 //	}

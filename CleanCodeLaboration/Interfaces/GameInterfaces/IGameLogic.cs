@@ -1,4 +1,4 @@
-﻿namespace CleanCodeLaboration.Interfaces;
+﻿namespace CleanCodeLaboration.Interfaces.GameInterfaces;
 
 public interface IGameLogic
 {

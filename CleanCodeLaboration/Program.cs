@@ -6,8 +6,8 @@ partial class MainClass
 {
     public static void Main(string[] args)
     {
-        Dashboard dashboard = new Dashboard();
+        GameConsole _gameConsole = new GameConsole();
 
-        dashboard.Run();
+        _gameConsole.Run();
     }
 }
