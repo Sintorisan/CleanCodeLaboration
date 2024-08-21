@@ -1,11 +1,13 @@
 ﻿using CleanCodeLaboration.Interfaces;
 using CleanCodeLaboration.Interfaces.GameInterfaces;
 
+// Spelets UI.
+
 namespace CleanCodeLaboration.Games.Moo
 {
-    public class MooGameUI : IGameUI
+    public class MooGameIO : IGameIO
     {
-        private readonly ICartridge _cartridge;
+        private readonly IGameplayController _cartridge;
         private string _playerCurrentGuess = string.Empty;
         private bool _isPlaying = true;
         private bool _isVictorious = false;
@@ -14,7 +16,7 @@ namespace CleanCodeLaboration.Games.Moo
         public string NumberCombination => _cartridge.GetFirstDataStorage;
         public string PlayerGuessStatus => _cartridge.GetSecondDataStorage;
 
-        public MooGameUI(ICartridge cartridge)
+        public MooGameIO(IGameplayController cartridge)
         {
             _cartridge = cartridge;
         }
@@ -23,7 +25,6 @@ namespace CleanCodeLaboration.Games.Moo
         {
             GreetPlayer();
             PrepareGame();
-            Console.WriteLine(NumberCombination);
 
             do
             {
@@ -136,11 +137,8 @@ namespace CleanCodeLaboration.Games.Moo
                 Console.WriteLine("Thank you for playing");
             }
 
-
             _cartridge.GameShutDown();
             _isPlaying = false;
-
-
         }
 
         private void AddHighScore()

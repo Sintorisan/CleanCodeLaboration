@@ -53,5 +53,4 @@ public class HighScoreService : IHighScoreService
     public ICollection<HighScoreForm> GetAllHighScores() => _highScores;
 
     public ICollection<HighScoreForm> GetAllUserHighScore(string id) => _highScores.FindAll(h => h.PlayerId == id);
-
 }

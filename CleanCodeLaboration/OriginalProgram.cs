@@ -6,10 +6,8 @@
 //{
 //	class MainClass
 //	{
-
 //		public static void Main(string[] args)
 //		{
-
 //			bool playOn = true;
 //			Console.WriteLine("Enter your user name:\n");
 //			string name = Console.ReadLine();
@@ -17,7 +15,6 @@
 //			while (playOn)
 //			{
 //				string goal = makeGoal();
-
 
 //				Console.WriteLine("New game:\n");
 //				//comment out or remove next line to play real games!
@@ -89,7 +86,6 @@
 //			return "BBBB".Substring(0, bulls) + "," + "CCCC".Substring(0, cows);
 //		}
 
-
 //		static void showTopList()
 //		{
 //			StreamReader input = new StreamReader("result.txt");
@@ -111,7 +107,6 @@
 //					results[pos].Update(guesses);
 //				}
 
-
 //			}
 //			results.Sort((p1, p2) => p1.Average().CompareTo(p2.Average()));
 //			Console.WriteLine("Player   games average");
@@ -128,7 +123,6 @@
 //		public string Name { get; private set; }
 //		public int NGames { get; private set; }
 //		int totalGuess;
-
 
 //		public PlayerData(string name, int guesses)
 //		{
@@ -148,12 +142,10 @@
 //			return (double)totalGuess / NGames;
 //		}
 
-
 //		public override bool Equals(Object p)
 //		{
 //			return Name.Equals(((PlayerData)p).Name);
 //		}
-
 
 //		public override int GetHashCode()
 //		{

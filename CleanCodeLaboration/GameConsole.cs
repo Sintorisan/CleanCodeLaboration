@@ -8,16 +8,16 @@ public class GameConsole
     private const string GAME_ERROR_MESSAGE = "Game not found!";
     private const string INVALID_CHOICE = "Invalid input. Please try again.";
 
-    private readonly GameEngineBuilderService _gameEngineBuilderService = new GameEngineBuilderService();
+    private readonly GameIOBuilder _gameEngineBuilderService = new GameIOBuilder();
     private readonly Dictionary<int, string> _gamesMap;
     private bool _isPlaying = true;
     private string _playerName = string.Empty;
-
 
     public GameConsole()
     {
         _gamesMap = new Dictionary<int, string>{
             { 1, "Cows N Bulls" },
+            { 2, "Rock Paper Scissors" }
         };
     }
 
@@ -107,17 +107,17 @@ public class GameConsole
         _isPlaying = false;
     }
 
-    private IGameUI? AssembleGame(int game)
+    private IGameIO? AssembleGame(int game)
     {
         return game switch
         {
             1 => _gameEngineBuilderService.BuildMoo(_playerName),
+            2 => _gameEngineBuilderService.BuildRockPaperScissors(_playerName),
             _ => null
         };
-
     }
 
-    private void StartGame(IGameUI? game)
+    private void StartGame(IGameIO? game)
     {
         Console.Clear();
 

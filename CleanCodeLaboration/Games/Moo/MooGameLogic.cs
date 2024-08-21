@@ -2,6 +2,8 @@
 
 namespace CleanCodeLaboration.Games.Moo;
 
+//Spelets logik som innehåller start, spelloopen och avstägning
+
 public class MooGameLogic : IGameLogic
 {
     private const int MAX_NUMBER = 9999;
@@ -12,7 +14,6 @@ public class MooGameLogic : IGameLogic
     public int Score { get; set; }
     public string FirstDataStorage { get; set; } = string.Empty; //Random number to guess
     public string SecondDataStorage { get; set; } = string.Empty; //User guess
-
 
     public void GameStartUp()
     {
@@ -29,9 +30,8 @@ public class MooGameLogic : IGameLogic
         ResetStorage();
     }
 
-
     private void CreateNumberCombination()
-    {// Ska slumpa fram 4 unika siffror
+    {
         int numberCombination = randomGenerator.Next(MIN_NUMBER, MAX_NUMBER);
         FirstDataStorage = numberCombination.ToString();
     }
@@ -68,9 +68,9 @@ public class MooGameLogic : IGameLogic
         }
 
         return CowAndBullsResponse(cows, bulls);
-
     }
-    string CowAndBullsResponse(int cows, int bulls) => "BBBB".Substring(0, bulls) + "," + "CCCC".Substring(0, cows);
+
+    private string CowAndBullsResponse(int cows, int bulls) => "BBBB".Substring(0, bulls) + "," + "CCCC".Substring(0, cows);
 
     public void ResetStorage()
     {

@@ -32,6 +32,7 @@ public class PlayerService : IPlayerService
 
         return CreatePlayer(playerName);
     }
+
     public bool isPlayerFound(string playerId)
     {
         if (!File.Exists(FILE_PATH))
@@ -39,6 +40,7 @@ public class PlayerService : IPlayerService
 
         return _allPlayers.Any(p => p.PlayerId.ToLower() == playerId.ToLower());
     }
+
     public IPlayer GetSinglePlayer(string userName)
     {
         return _allPlayers.FirstOrDefault(p => p.PlayerId == userName)!;
@@ -72,8 +74,4 @@ public class PlayerService : IPlayerService
             }
         }
     }
-
-
-
 }
-

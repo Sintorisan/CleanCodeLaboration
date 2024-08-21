@@ -7,9 +7,9 @@ public interface IGameLogic
     string SecondDataStorage { get; set; }
     int Score { get; set; }
 
-
-
     void GameStartUp();
+
     void GamePlayLoop();
+
     void GameShutDown();
 }

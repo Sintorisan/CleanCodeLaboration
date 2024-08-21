@@ -1,6 +1,6 @@
 ﻿namespace CleanCodeLaboration.Interfaces.GameInterfaces
 {
-    public interface IGameUI
+    public interface IGameIO
     {
         void Run();
     }

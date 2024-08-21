@@ -14,7 +14,6 @@ namespace CleanCodeLaboration.Tests
         private string _filePath;
         private HighScoreForm _highScoreForm;
 
-
         [TestInitialize]
         public void TestInitialize()
         {
@@ -70,7 +69,5 @@ namespace CleanCodeLaboration.Tests
             var getHighestScore = _highScoreService.GetHighestPlayerScore(_playerId);
             Assert.AreEqual(newHighScoreForm.HighScore, getHighestScore.HighScore);
         }
-
-
     }
 }

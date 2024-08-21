@@ -2,7 +2,7 @@
 
 namespace MooGame;
 
-partial class MainClass
+internal partial class MainClass
 {
     public static void Main(string[] args)
     {

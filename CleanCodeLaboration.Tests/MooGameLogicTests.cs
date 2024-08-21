@@ -6,6 +6,7 @@ namespace CleanCodeLaboration.Tests
     public class MooGameLogicTests
     {
         private MooGameLogic _gameLogic;
+
         [TestInitialize]
         public void TestInitialize()
         {
@@ -14,8 +15,6 @@ namespace CleanCodeLaboration.Tests
             _gameLogic.FirstDataStorage = "1234";
             _gameLogic.SecondDataStorage = "1243";
         }
-
-
 
         [TestMethod]
         public void DoesGameStartUpCreateFourDigitNumber()
