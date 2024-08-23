@@ -1,15 +1,10 @@
-﻿using CleanCodeLaboration.Entities;
-
-namespace CleanCodeLaboration.Interfaces.GameInterfaces;
+﻿namespace CleanCodeLaboration.Interfaces.GameInterfaces;
 
 public interface IGameplayController
 {
-    public string GetFirstDataStorage { get; }
-    public string GetSecondDataStorage { get; }
-
-    void SetFirstDataStorage(string data);
-
-    void SetSecondDataStorage(string data);
+    public string FirstDataStorage { get; set; }
+    public string SecondDataStorage { get; set; }
+    public int Score { get; set; }
 
     IPlayer GetSingleIPlayer(string playerName);
 
@@ -17,15 +12,9 @@ public interface IGameplayController
 
     public IPlayer GetCurrentPlayer();
 
-    public int GetCurrentScore();
+    public void CreateAndAddNewHighScore();
 
-    public void CreateNewHighScore();
-
-    public HighScoreForm GetHighestScore(string playerName);
-
-    public List<HighScoreForm> GetAllHighScores();
-
-    public List<HighScoreForm> GetAllPlayerHighScores(string playerName);
+    public void RunHighScoreIO();
 
     public void GameStartUp();
 

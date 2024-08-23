@@ -7,18 +7,18 @@ namespace CleanCodeLaboration.Games.Moo
 {
     public class MooGameIO : IGameIO
     {
-        private readonly IGameplayController _cartridge;
+        private readonly IGameplayController _controller;
         private string _playerCurrentGuess = string.Empty;
         private bool _isPlaying = true;
         private bool _isVictorious = false;
 
-        public IPlayer Player => _cartridge.GetCurrentPlayer();
-        public string NumberCombination => _cartridge.GetFirstDataStorage;
-        public string PlayerGuessStatus => _cartridge.GetSecondDataStorage;
+        public IPlayer Player => _controller.GetCurrentPlayer();
+        public string NumberCombination => _controller.FirstDataStorage;
+        public string PlayerGuessStatus => _controller.SecondDataStorage;
 
-        public MooGameIO(IGameplayController cartridge)
+        public MooGameIO(IGameplayController controller)
         {
-            _cartridge = cartridge;
+            _controller = controller;
         }
 
         public void Run()
@@ -37,41 +37,31 @@ namespace CleanCodeLaboration.Games.Moo
 
         private void GreetPlayer()
         {
-            Console.WriteLine($"Hello {Player.PlayerId}, and welcome to Cows n' Bulls!\n");
-
-            Console.WriteLine("Want to see your high scores? y/n");
-            if (Console.ReadLine().ToLower() == "y")
+            Console.WriteLine($"Hello {Player.PlayerId}, and welcome to Moo!\n");
+            Console.WriteLine("Here are some ground rules for the game!\n" +
+                " - A secret four-digit number combination will be generated, each digit ranging from 0 to 9.\n" +
+                " - Your goal is to guess this four-digit number.\n" +
+                " - After each guess, you'll receive a hint to help you get closer to the secret number.\n" +
+                " - The hint consists of two parts:\n" +
+                "     1. 'Bulls': The number of digits that are correct and in the correct position.\n" +
+                "     2. 'Cows': The number of digits that are correct but in the wrong position.\n" +
+                " - For example, if the secret number is '1234' and you guess '1325':\n" +
+                "     - You have 1 Bull (digit '1' is correct and in the correct position).\n" +
+                "     - You have 2 Cows (digits '2' and '3' are correct but in the wrong positions).\n" +
+                " - Keep guessing until you have all 4 Bulls, which means you've guessed the number correctly!\n"); Console.WriteLine("To see high scores press 'h' or press any other key to start a new game!");
+            var keyPressed = Console.ReadKey();
+            if (keyPressed.Key == ConsoleKey.H)
             {
-                DisplayPlayerHighScores();
+                _controller.RunHighScoreIO();
             }
 
             Console.Clear();
         }
 
-        private void DisplayPlayerHighScores()
-        {
-            var highScores = _cartridge.GetAllPlayerHighScores(Player.PlayerId);
-
-            if (!highScores.Any())
-            {
-                Console.WriteLine("You currently don't have any high scores!");
-            }
-            else
-            {
-                foreach (var highScore in highScores)
-                {
-                    Console.WriteLine($"Score: {highScore.HighScore} Date: {highScore.Date.ToShortDateString()}");
-                }
-            }
-
-            Console.WriteLine("Press any key to start a new game!");
-            Console.ReadKey();
-        }
-
         private void PrepareGame()
         {
             _isPlaying = true;
-            _cartridge.GameStartUp();
+            _controller.GameStartUp();
         }
 
         private void HandlePlayerGuess()
@@ -108,12 +98,12 @@ namespace CleanCodeLaboration.Games.Moo
 
         private void SetGuess(string guess)
         {
-            _cartridge.SetSecondDataStorage(guess);
+            _controller.SecondDataStorage = guess;
         }
 
         private void CompareGuess()
         {
-            _cartridge.GamePlayLoop();
+            _controller.GamePlayLoop();
 
             if (IsCorrectGuess())
             {
@@ -137,7 +127,7 @@ namespace CleanCodeLaboration.Games.Moo
                 Console.WriteLine("Thank you for playing");
             }
 
-            _cartridge.GameShutDown();
+            _controller.GameShutDown();
             _isPlaying = false;
         }
 
@@ -147,7 +137,7 @@ namespace CleanCodeLaboration.Games.Moo
 
             if (Console.ReadLine().ToLower() == "y")
             {
-                _cartridge.CreateNewHighScore();
+                _controller.CreateAndAddNewHighScore();
                 Console.WriteLine("Highscore added!");
             }
         }

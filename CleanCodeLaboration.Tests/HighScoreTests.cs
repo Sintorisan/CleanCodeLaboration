@@ -51,23 +51,5 @@ namespace CleanCodeLaboration.Tests
             Assert.IsTrue(highScores.Any());
             Assert.IsTrue(highScores.Contains(_highScoreForm));
         }
-
-        [TestMethod]
-        public void DoesGetAllPlayerHighScore()
-        {
-            var playerHighScores = _highScoreService.GetAllUserHighScore(_playerId);
-
-            Assert.IsTrue(playerHighScores.Any());
-            Assert.IsTrue(playerHighScores.Contains(_highScoreForm));
-        }
-
-        [TestMethod]
-        public void DoesGetTheHighestPlayerHighScore()
-        {
-            var newHighScoreForm = AddTestHighScoreToDb(10);
-
-            var getHighestScore = _highScoreService.GetHighestPlayerScore(_playerId);
-            Assert.AreEqual(newHighScoreForm.HighScore, getHighestScore.HighScore);
-        }
     }
 }

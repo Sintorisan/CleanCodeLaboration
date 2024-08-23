@@ -25,25 +25,19 @@ public class GameConsole
     {
         Console.WriteLine("Welcome to Sindri's super awesome gaming console!");
 
-        PlayerInteraction();
+        GetPlayerName();
 
         while (_isPlaying)
         {
+            ChooseGame();
             HandlePlayerGameChoice();
         };
     }
 
-    private void PlayerInteraction()
+    private void GetPlayerName()
     {
         Console.Write("Who is playing?: ");
         _playerName = GetValidInput();
-
-        Console.Clear();
-
-        Console.WriteLine($"Welcome to the party {_playerName}!\nHere's the games to choose from.\n");
-        DisplayAllGames();
-
-        Console.Write("Please choose the number of the game to play: ");
     }
 
     private string GetValidInput()
@@ -57,6 +51,15 @@ public class GameConsole
         }
 
         return input;
+    }
+
+    private void ChooseGame()
+    {
+        Console.Clear();
+
+        Console.WriteLine($"Welcome to the party {_playerName}!\nHere's the games to choose from.\n");
+        DisplayAllGames();
+        Console.Write("Please choose the number of the game to play: ");
     }
 
     private void DisplayAllGames()

@@ -4,21 +4,37 @@ using CleanCodeLaboration.Interfaces.GameInterfaces;
 using CleanCodeLaboration.Interfaces.ServiceInterfaces;
 using CleanCodeLaboration.Services;
 
-namespace CleanCodeLaboration.Games;
-
-// Använder "Facade pattern" för att slår ihop logiken men alla tjänster för att kunna köra i konsollen
+namespace CleanCodeLaboration;
 
 public class GameplayController : IGameplayController
 {
     private readonly IGameLogic _gameLogic;
-    private readonly IHighScoreService _highScore;
     private readonly IPlayerService _playerService;
+    private readonly HighScoreIO _highScoreIO;
 
     public GameplayController(IGameLogic gameLogic, string playerName)
     {
         _gameLogic = gameLogic;
-        _highScore = new HighScoreService(gameLogic);
         _playerService = new PlayerService(playerName);
+        _highScoreIO = new HighScoreIO(gameLogic, playerName);
+    }
+
+    public int Score
+    {
+        get => _gameLogic.Score;
+        set => _gameLogic.Score = value;
+    }
+
+    public string FirstDataStorage
+    {
+        get => _gameLogic.FirstDataStorage;
+        set => _gameLogic.FirstDataStorage = value;
+    }
+
+    public string SecondDataStorage
+    {
+        get => _gameLogic.SecondDataStorage;
+        set => _gameLogic.SecondDataStorage = value;
     }
 
     public IPlayer GetSingleIPlayer(string playerName) => _playerService.GetSinglePlayer(playerName);
@@ -27,7 +43,7 @@ public class GameplayController : IGameplayController
 
     public IPlayer GetCurrentPlayer() => _playerService.GetCurrentPlayer();
 
-    public void CreateNewHighScore()
+    public void CreateAndAddNewHighScore()
     {
         var newHighScore = new HighScoreForm
         {
@@ -37,24 +53,10 @@ public class GameplayController : IGameplayController
             HighScore = _gameLogic.Score
         };
 
-        _highScore.AddHighScore(newHighScore);
+        _highScoreIO.AddNewHighScore(newHighScore);
     }
 
-    public HighScoreForm GetHighestScore(string playerName) => _highScore.GetHighestPlayerScore(playerName);
-
-    public List<HighScoreForm> GetAllHighScores() => _highScore.GetAllHighScores().ToList();
-
-    public List<HighScoreForm> GetAllPlayerHighScores(string playerName) => _highScore.GetAllUserHighScore(playerName).ToList();
-
-    public string GetFirstDataStorage => _gameLogic.FirstDataStorage;
-
-    public void SetFirstDataStorage(string data) => _gameLogic.FirstDataStorage = data;
-
-    public string GetSecondDataStorage => _gameLogic.SecondDataStorage;
-
-    public void SetSecondDataStorage(string data) => _gameLogic.SecondDataStorage = data;
-
-    public int GetCurrentScore() => _gameLogic.Score;
+    public void RunHighScoreIO() => _highScoreIO.RunHighScoreIO();
 
     public void GameStartUp() => _gameLogic.GameStartUp();
 

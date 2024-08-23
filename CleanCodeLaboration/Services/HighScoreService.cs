@@ -43,14 +43,5 @@ public class HighScoreService : IHighScoreService
         File.AppendAllText(_filePath, $"{highScore.PlayerId},{highScore.HighScore}\n");
     }
 
-    public HighScoreForm GetHighestPlayerScore(string playerId)
-    {
-        var highestScore = GetAllUserHighScore(playerId).OrderByDescending(h => h.HighScore).FirstOrDefault();
-
-        return highestScore ?? new HighScoreForm() { GameId = "", HighScore = 0, Date = DateTime.Now, PlayerId = "" };
-    }
-
     public ICollection<HighScoreForm> GetAllHighScores() => _highScores;
-
-    public ICollection<HighScoreForm> GetAllUserHighScore(string id) => _highScores.FindAll(h => h.PlayerId == id);
 }
