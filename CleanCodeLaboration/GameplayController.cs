@@ -10,7 +10,7 @@ public class GameplayController : IGameplayController
 {
     private readonly IGameLogic _gameLogic;
     private readonly IPlayerService _playerService;
-    private readonly HighScoreIO _highScoreIO;
+    private readonly IHighScoreIO _highScoreIO;
 
     public GameplayController(IGameLogic gameLogic, string playerName)
     {

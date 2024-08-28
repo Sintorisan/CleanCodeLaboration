@@ -1,11 +1,12 @@
 ﻿using CleanCodeLaboration.Entities;
+using CleanCodeLaboration.Interfaces;
 using CleanCodeLaboration.Interfaces.GameInterfaces;
 using CleanCodeLaboration.Interfaces.ServiceInterfaces;
 using CleanCodeLaboration.Services;
 
 namespace CleanCodeLaboration;
 
-public class HighScoreIO
+public class HighScoreIO : IHighScoreIO
 {
     private readonly IHighScoreService _highScoreService;
     private readonly List<HighScoreForm> _highScoreList;
@@ -60,7 +61,7 @@ public class HighScoreIO
         }
     }
 
-    private static void DisplayMenu(string[] options, int selectedIndex)
+    private void DisplayMenu(string[] options, int selectedIndex)
     {
         Console.Clear();
         for (int i = 0; i < options.Length; i++)
@@ -100,7 +101,7 @@ public class HighScoreIO
         Console.ReadKey();
     }
 
-    public void DisplayAllHighScores()
+    private void DisplayAllHighScores()
     {
         foreach (var hs in GetAllHighScores())
         {
@@ -108,7 +109,7 @@ public class HighScoreIO
         }
     }
 
-    public void DisplayAllIndividualHighScores(string player)
+    private void DisplayAllIndividualHighScores(string player)
     {
         foreach (var hs in GetAllIndividualHighScores(player))
         {
@@ -118,8 +119,14 @@ public class HighScoreIO
 
     public void AddNewHighScore(HighScoreForm newHighScore)
     {
-        _highScoreService.AddHighScore(newHighScore);
-        DisplayHighScoreAddedMessage();
+        if (_highScoreService.AddHighScore(newHighScore))
+        {
+            DisplayHighScoreAddedMessage();
+        }
+        else
+        {
+            DisplayHighScoreFailedMessage();
+        }
     }
 
     private static void DisplayHighScoreAddedMessage()
@@ -139,6 +146,26 @@ ___________________________________________
 ";
         Console.Clear();
         Console.WriteLine(confirmationScreen);
+        Console.ReadKey();
+    }
+
+    private void DisplayHighScoreFailedMessage()
+    {
+        var failedScreen =
+@$"
+___________________________________________
+|                                         |
+|                                         |
+|          Your score has failed          |
+|               to be added!              |
+|                                         |
+|         Press any key to return         |
+|           to the main menu...           |
+|                                         |
+|_________________________________________|
+";
+        Console.Clear();
+        Console.WriteLine(failedScreen);
         Console.ReadKey();
     }
 }
