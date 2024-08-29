@@ -17,7 +17,7 @@ namespace CleanCodeLaboration.Tests
         }
 
         [TestMethod]
-        public void DoesGameStartUpCreateFourDigitNumber()
+        public void GameStartUpCreateFourDigitNumber()
         {
             _gameLogic.GameStartUp();
 
@@ -25,7 +25,7 @@ namespace CleanCodeLaboration.Tests
         }
 
         [TestMethod]
-        public void DoesGamePlayLoopAddScoreToUser()
+        public void GamePlayLoopAddScoreToUser()
         {
             _gameLogic.GamePlayLoop();
 
@@ -33,7 +33,7 @@ namespace CleanCodeLaboration.Tests
         }
 
         [TestMethod]
-        public void DoesGameShutDownResetStorage()
+        public void GameShutDownResetStorage()
         {
             _gameLogic.GameShutDown();
 
@@ -42,7 +42,7 @@ namespace CleanCodeLaboration.Tests
         }
 
         [TestMethod]
-        public void DoesGamePlayLoopGiveRightResponse()
+        public void GamePlayLoopGiveRightResponse()
         {
             _gameLogic.GamePlayLoop();
 

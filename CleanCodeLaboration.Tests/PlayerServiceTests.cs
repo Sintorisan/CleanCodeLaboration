@@ -19,14 +19,14 @@ namespace CleanCodeLaboration.Tests
         }
 
         [TestMethod]
-        public void DoesInitialLoadAssignPlayerField()
+        public void InitialLoadAssignPlayerField()
         {
             var currentPlayer = _playerService.GetCurrentPlayer();
             Assert.AreEqual(_playerId, currentPlayer.PlayerId);
         }
 
         [TestMethod]
-        public void DoesCreateAPlayer()
+        public void CreateAPlayer()
         {
             _playerService.SetPlayer(_playerId);
             var player = _playerService.GetSinglePlayer(_playerId);
@@ -34,14 +34,14 @@ namespace CleanCodeLaboration.Tests
         }
 
         [TestMethod]
-        public void DoesGetASinglePlayer()
+        public void GetASinglePlayer()
         {
             var player = _playerService.GetSinglePlayer(_playerId);
             Assert.AreEqual(player.PlayerId, _playerId);
         }
 
         [TestMethod]
-        public void DoesFindPlayerInList()
+        public void FindPlayerInList()
         {
             Assert.IsTrue(_playerService.isPlayerFound(_playerId));
         }
