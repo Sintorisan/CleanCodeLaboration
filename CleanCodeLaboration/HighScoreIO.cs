@@ -119,14 +119,9 @@ public class HighScoreIO : IHighScoreIO
 
     public void AddNewHighScore(HighScoreForm newHighScore)
     {
-        if (_highScoreService.AddHighScore(newHighScore))
-        {
-            DisplayHighScoreAddedMessage();
-        }
-        else
-        {
-            DisplayHighScoreFailedMessage();
-        }
+        _highScoreService.AddHighScore(newHighScore);
+
+        DisplayHighScoreAddedMessage();
     }
 
     private static void DisplayHighScoreAddedMessage()
@@ -146,26 +141,6 @@ ___________________________________________
 ";
         Console.Clear();
         Console.WriteLine(confirmationScreen);
-        Console.ReadKey();
-    }
-
-    private void DisplayHighScoreFailedMessage()
-    {
-        var failedScreen =
-@$"
-___________________________________________
-|                                         |
-|                                         |
-|          Your score has failed          |
-|               to be added!              |
-|                                         |
-|         Press any key to return         |
-|           to the main menu...           |
-|                                         |
-|_________________________________________|
-";
-        Console.Clear();
-        Console.WriteLine(failedScreen);
         Console.ReadKey();
     }
 }

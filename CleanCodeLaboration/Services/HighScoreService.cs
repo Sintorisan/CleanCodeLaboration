@@ -15,18 +15,10 @@ public class HighScoreService : IHighScoreService
     {
         _game = game;
         _database = new HighScoreDb(game.GameId);
-        try
-        {
-            _database.InitialLoad();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Something went wrong. Database not loaded. {ex.Message}");
-            throw;
-        }
+        _database.InitialLoad();
     }
 
-    public bool AddHighScore(HighScoreForm highScore) => _database.Add(highScore);
+    public void AddHighScore(HighScoreForm highScore) => _database.Add(highScore);
 
     public ICollection<HighScoreForm> GetAllHighScores() => _database.GetAll();
 }

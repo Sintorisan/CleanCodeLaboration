@@ -1,16 +1,15 @@
 ﻿using CleanCodeLaboration.Interfaces;
 using CleanCodeLaboration.Interfaces.GameInterfaces;
 
-// Spelets UI.
-
 namespace CleanCodeLaboration.Games.Moo
 {
     public class MooGameIO : IGameIO
     {
+        private const string INVALID_CHOICE_MESSAGE = "Invalid input. Please try again.";
+
         private readonly IGameplayController _controller;
         private string _playerCurrentGuess = string.Empty;
         private bool _isPlaying = true;
-        private bool _isVictorious = false;
 
         public IPlayer Player => _controller.GetCurrentPlayer();
         public string NumberCombination => _controller.FirstDataStorage;
@@ -23,32 +22,30 @@ namespace CleanCodeLaboration.Games.Moo
 
         public void Run()
         {
-            GreetPlayer();
-            PrepareGame();
-
-            do
+            try
             {
-                HandlePlayerGuess();
-                DisplayResults();
-            } while (_isPlaying);
+                StartGame();
+                GameLoop();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            }
+            finally
+            {
+                EndGame();
+            }
+        }
 
-            Console.Clear();
+        private void StartGame()
+        {
+            GreetPlayer();
+            _isPlaying = true;
         }
 
         private void GreetPlayer()
         {
-            Console.WriteLine($"Hello {Player.PlayerId}, and welcome to Moo!\n");
-            Console.WriteLine("Here are some ground rules for the game!\n" +
-                " - A secret four-digit number combination will be generated, each digit ranging from 0 to 9.\n" +
-                " - Your goal is to guess this four-digit number.\n" +
-                " - After each guess, you'll receive a hint to help you get closer to the secret number.\n" +
-                " - The hint consists of two parts:\n" +
-                "     1. 'Bulls': The number of digits that are correct and in the correct position.\n" +
-                "     2. 'Cows': The number of digits that are correct but in the wrong position.\n" +
-                " - For example, if the secret number is '1234' and you guess '1325':\n" +
-                "     - You have 1 Bull (digit '1' is correct and in the correct position).\n" +
-                "     - You have 2 Cows (digits '2' and '3' are correct but in the wrong positions).\n" +
-                " - Keep guessing until you have all 4 Bulls, which means you've guessed the number correctly!\n"); Console.WriteLine("To see high scores press 'h' or press any other key to start a new game!");
+            PrintScreen(WelcomeScreen(), false);
             var keyPressed = Console.ReadKey();
             if (keyPressed.Key == ConsoleKey.H)
             {
@@ -58,97 +55,213 @@ namespace CleanCodeLaboration.Games.Moo
             Console.Clear();
         }
 
+        private void GameLoop()
+        {
+            PrepareGame();
+            do
+            {
+                Console.WriteLine(NumberCombination);
+                GetPlayerGuess();
+                HandleResults();
+            } while (_isPlaying);
+        }
+
         private void PrepareGame()
         {
             _isPlaying = true;
             _controller.GameStartUp();
+            PrintScreen(ResultScreen(), false);
         }
 
-        private void HandlePlayerGuess()
+        private void GetPlayerGuess()
         {
-            string guess = GetPlayerGuess();
+            var playerInput = GetValidUserInput();
+            _playerCurrentGuess = playerInput;
+        }
 
-            if (ShouldContinue(guess))
+        private string GetValidUserInput()
+        {
+            var input = Console.ReadLine();
+
+            while (!ApprovedChoice(input!))
             {
-                _playerCurrentGuess = guess;
-                SetGuess(guess);
-                CompareGuess();
+                Console.WriteLine(INVALID_CHOICE_MESSAGE);
+                input = Console.ReadLine();
             }
-            else
-            {
-                EndGame();
-            }
+
+            return input!;
         }
 
-        private string GetPlayerGuess()
+        private bool ApprovedChoice(string input)
         {
-            Console.Write("Type in your guess: ");
-            return Console.ReadLine();
+            var isApproved = input.Length == 4 || input.Equals("q", StringComparison.OrdinalIgnoreCase);
+
+            return isApproved;
         }
 
-        private bool ShouldContinue(string input)
+        private void HandleResults()
         {
-            if (input.ToLower() == "q")
+            if (Quit())
             {
                 _isPlaying = false;
-                return false;
+                return;
             }
-            return true;
-        }
 
-        private void SetGuess(string guess)
-        {
-            _controller.SecondDataStorage = guess;
-        }
-
-        private void CompareGuess()
-        {
-            _controller.GamePlayLoop();
+            CompareGuess();
+            PrintScreen(ResultScreen(), false);
 
             if (IsCorrectGuess())
             {
-                _isVictorious = true;
-                EndGame();
+                PlayerWinner();
             }
+        }
+
+        private bool Quit() => _playerCurrentGuess.Equals("q", StringComparison.OrdinalIgnoreCase);
+
+        private void CompareGuess()
+        {
+            //Sets the player guess as the SecondDataStorage which is then processed in the game logic
+            //and returns the cow and bulls
+            _controller.SecondDataStorage = _playerCurrentGuess;
+
+            _controller.GamePlayLoop();
         }
 
         private bool IsCorrectGuess() => _playerCurrentGuess == NumberCombination;
 
-        private void EndGame()
+        private void PlayerWinner()
         {
-            if (_isVictorious)
+            _isPlaying = false;
+            PrintScreen(WinnerScreen(), false);
+
+            var keyInfo = Console.ReadKey(true);
+            if (keyInfo.Key == ConsoleKey.Y)
             {
-                Console.WriteLine("Congrats, you found the hidden number!");
-                Console.WriteLine(_playerCurrentGuess);
-                AddHighScore();
+                AddHighscore();
             }
             else
             {
-                Console.WriteLine("Thank you for playing");
+                Console.WriteLine("\nYour score was not added to the High Score List.");
+                Console.WriteLine("Press any key to return to the main menu...");
+                Console.ReadKey();
             }
+        }
 
+        private void AddHighscore()
+        {
+            _controller.CreateAndAddNewHighScore();
+        }
+
+        private void EndGame()
+        {
+            PrintScreen(GoodbyeScreen(), true);
             _controller.GameShutDown();
-            _isPlaying = false;
         }
 
-        private void AddHighScore()
+        private void PrintScreen(string screen, bool interaction)
         {
-            Console.WriteLine("Do you want to add this score to your high score list? y/n");
-
-            if (Console.ReadLine().ToLower() == "y")
+            Console.Clear();
+            Console.WriteLine(screen);
+            if (interaction)
             {
-                _controller.CreateAndAddNewHighScore();
-                Console.WriteLine("Highscore added!");
+                Console.ReadKey();
             }
         }
 
-        private void DisplayResults()
+        private string WelcomeScreen()
         {
-            if (_isPlaying)
-            {
-                Console.WriteLine($"Your guess: {_playerCurrentGuess}");
-                Console.WriteLine($"Bulls n' Cows: {PlayerGuessStatus}");
-            }
+            return @$"
+___________________________________________
+|                                         |
+|*****************************************|
+|*                                       *|
+|*      W E L C O M E   T O   T H E      *|
+|*                                       *|
+|*           G A M E   O F               *|
+|*                                       *|
+|*                M O O !                *|
+|*****************************************|
+|                                         |
+| {Player.PlayerId,22}!                 |
+| Welcome to the ultimate guessing game!  |
+|                                         |
+| Here are the rules:                     |
+| - Guess the secret 4-digit number.      |
+| - Each digit is between 0 and 9.        |
+| - Hints after each guess:               |
+|     Bulls: Correct digit, right place.  |
+|     Cows: Correct digit, wrong place.   |
+| - Example: Secret '1234', guess '1325': |
+|     1 Bull ('1') and 2 Cows ('2' & '3').|
+| - Keep guessing until you get 4 Bulls!  |
+|                                         |
+| To see high scores press 'h', or press  |
+| any other key to start a new game!      |
+|_________________________________________|
+";
+        }
+
+        private string ResultScreen()
+        {
+            return @$"
+___________________________________________
+|                                         |
+|*****************************************|
+|*                                       *|
+|*           R E S U L T S               *|
+|*                                       *|
+|*****************************************|
+|                                         |
+| Your Guess: {_playerCurrentGuess,26}  |
+|                                         |
+| Bulls & Cows: {PlayerGuessStatus,24}  |
+|                                         |
+|*****************************************|
+|_________________________________________|
+
+";
+        }
+
+        private string WinnerScreen()
+        {
+            return @$"
+___________________________________________
+|                                         |
+|*****************************************|
+|*                                       *|
+|*     C O N G R A T U L A T I O N S     *|
+|*                                       *|
+|*{Player.PlayerId.ToUpper(),24}               *|
+|*             Y O U   W O N!            *|
+|*                                       *|
+|*****************************************|
+|                                         |
+|         Your Score: {_controller.Score} points!           |
+|                                         |
+|   Would you like to add your score to   |
+|          the High Score List?           |
+|    Press 'Y' for Yes or any other key   |
+|              to continue...             |
+|_________________________________________|
+";
+        }
+
+        private string GoodbyeScreen()
+        {
+            return @$"
+___________________________________________
+|                                         |
+|*****************************************|
+|*                                       *|
+|*       T H A N K   Y O U   F O R       *|
+|*                                       *|
+|*           P L A Y I N G ! !           *|
+|*                                       *|
+|*****************************************|
+|                                         |
+|              See you soon!              |
+|_________________________________________|
+";
         }
     }
 }

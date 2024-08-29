@@ -67,7 +67,6 @@ public class RockPaperScissorsGameIO : IGameIO
         do
         {
             PrepareOpponent();
-            Console.WriteLine(ComputerHand);
             GetPlayersChoice();
             HandleResults();
         } while (_isPlaying);
@@ -80,21 +79,21 @@ public class RockPaperScissorsGameIO : IGameIO
 
     private void GetPlayersChoice()
     {
-        var playerInput = GetValidChoice();
+        var playerInput = GetValidUserInput();
         _controller.SecondDataStorage = playerInput;
     }
 
-    private string GetValidChoice()
+    private string GetValidUserInput()
     {
         var input = Console.ReadLine();
 
-        while (!ApprovedChoice(input))
+        while (!ApprovedChoice(input!))
         {
             Console.WriteLine(INVALID_CHOICE_MESSAGE);
             input = Console.ReadLine();
         }
 
-        return input;
+        return input!;
     }
 
     private bool ApprovedChoice(string input)
@@ -216,7 +215,7 @@ ___________________________________________
 |*           S C I S S O R S !           *|
 |*****************************************|
 |                                         |
-|{Player.PlayerId,22}!                  |
+|{Player.PlayerId,22}!                 |
 | Welcome to the ultimate showdown of     |
 | Rock, Paper, and Scissors!              |
 |                                         |
@@ -236,8 +235,7 @@ ___________________________________________
 
     private string PlayingFieldScreen(string result)
     {
-        return
-@$"
+        return @$"
 ___________________________________________
 |      Player               Computer      |
 |{_playerPoints,10}{_cpuPoints,22}         |
@@ -271,8 +269,7 @@ ___________________________________________
 
     private string LoserScreen()
     {
-        return
-    @$"
+        return @$"
 ___________________________________________
 |                                         |
 |*****************************************|
@@ -296,8 +293,7 @@ ___________________________________________
 
     private string WinnerScreen()
     {
-        return
-@$"
+        return @$"
 ___________________________________________
 |                                         |
 |*****************************************|

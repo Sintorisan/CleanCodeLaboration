@@ -22,8 +22,6 @@ public class PlayerService : IPlayerService
         Player = SetPlayer(playerName);
     }
 
-    public IPlayer GetCurrentPlayer() => Player!;
-
     public IPlayer SetPlayer(string playerName)
     {
         if (isPlayerFound(playerName))
@@ -47,10 +45,10 @@ public class PlayerService : IPlayerService
     {
         var newPlayer = new Player { PlayerId = playerName };
 
-        if (_database.Add(newPlayer))
-        {
-            return newPlayer;
-        }
-        return new Player { PlayerId = "DefaultPlayer" };
+        _database.Add(newPlayer);
+
+        return newPlayer;
     }
+
+    public IPlayer GetCurrentPlayer() => Player!;
 }

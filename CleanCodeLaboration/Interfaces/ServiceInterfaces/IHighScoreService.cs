@@ -6,5 +6,5 @@ public interface IHighScoreService
 {
     ICollection<HighScoreForm> GetAllHighScores();
 
-    public bool AddHighScore(HighScoreForm highScore);
+    public void AddHighScore(HighScoreForm highScore);
 }

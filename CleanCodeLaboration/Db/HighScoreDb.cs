@@ -18,7 +18,7 @@ public class HighScoreDb : IDatabase<HighScoreForm>
     {
         try
         {
-            if (!File.Exists(_filePath))
+            if (File.Exists(_filePath))
             {
                 var highScoresTable = File.ReadAllLines(_filePath);
 
@@ -35,28 +35,24 @@ public class HighScoreDb : IDatabase<HighScoreForm>
                 }
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new Exception("Failed to initialize the high score database.", ex);
         }
     }
 
-    public bool Add(HighScoreForm highScore)
+    public void Add(HighScoreForm highScore)
     {
         try
         {
             _highScores.Add(highScore);
             File.AppendAllText(_filePath, $"{highScore.PlayerId},{highScore.HighScore},{highScore.GameId},{highScore.Date}\n");
-            return true;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return false;
+            throw new Exception("Player could not be added.", ex);
         }
     }
 
-    public List<HighScoreForm> GetAll()
-    {
-        return _highScores;
-    }
+    public List<HighScoreForm> GetAll() => _highScores;
 }

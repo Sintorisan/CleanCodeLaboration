@@ -32,23 +32,22 @@ public class PlayerDb : IDatabase<IPlayer>
                 }
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new Exception("Failed to initialize the player database.", ex);
         }
     }
 
-    public bool Add(IPlayer newPlayer)
+    public void Add(IPlayer newPlayer)
     {
         try
         {
             File.AppendAllText(FILE_PATH, $"{newPlayer.PlayerId}\n");
             _players.Add(newPlayer);
-            return true;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return false;
+            throw new Exception("Player could not be added.", ex);
         }
     }
 
